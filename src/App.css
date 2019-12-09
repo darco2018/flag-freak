@@ -1,17 +1,27 @@
+body {
+  background: lightgrey;
+}
 .App {
   text-align: center;
 }
+#div-with-bg {
+  background: grey url('./globe.jpg');
+}
 
 header {
-  max-height: 200px;
+  height: 200px;
   background: grey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 header h1 {
-
+  font-size: 5em;
+  color: #999;
+  text-shadow: 2px 2px 2px #ce5937;
 }
 
-#header-img{
+#header-img {
   height: 100px;
-  
 }

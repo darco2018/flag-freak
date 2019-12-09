@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import './Flag.css'
 
 import PropTypes from 'prop-types';
 
-export default class FlagQuestion extends Component {
+export default class Flag extends Component {
   static propTypes = {
-    flag: PropTypes.string.isRequired
+    flagUrl: PropTypes.string.isRequired
   };
 
   render() {
     return (
       <div>
-        <img src={this.props.flag} alt="flag" />
+        <img src={this.props.flagUrl} alt="flag" />
       </div>
     );
   }

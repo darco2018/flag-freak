@@ -1,18 +1,105 @@
 import React, { Component } from 'react';
 /* import PropTypes from 'prop-types';
  */ import Button from './Button';
-import FlagChoices from './FlagChoices';
+import FlagOptions from './FlagOptions';
 import FlagAnswer from './FlagAnswer';
-import FlagQuestion from './FlagQuestion';
+import Flag from './Flag';
 
 const COUNTRIES = ['Poland', 'USA', 'Canada', 'India', 'Japan', 'Russia'];
-const NO_OF_CHOICES = 4;
+let COUNTRY_DATA = [];
+const NO_OF_OPTIONS = 4;
+const gameStatus = {
+  UNDECIDED: 0,
+  WINNER: 1,
+  LOST: 2
+};
 
 export default class CountryGame extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      options: null,
+      correctAnswer: null,
+      flagUrl: "",
+      userChoice: null,
+      status: null
+    };
   }
+
+  componentDidMount() {
+    let COUNTRY_DATA = this.fetchCountryData()
+    .then(data=>console.log("Data: " + data.length))
+    .then(() => {
+      this.initilizeGame();
+    })
+        
+    
+  }
+
+  fetchCountryData() {
+    
+    return fetch(
+      'https://restcountries.eu/rest/v2/all?fields=name;capital;flag'
+    )
+      .then(res => res.json())
+      .then(data => {
+       /*  console.log(COUNTRY_DATA.length); */
+        return data.length > 0 ? data : [];
+      })
+      .catch(err => console.log(err));
+  }
+
+  initilizeGame() {
+    let numbers = this.getDistinctRandomNumbers(
+      NO_OF_OPTIONS,
+      COUNTRIES.length
+    );
+    let options = numbers.map(num => COUNTRIES[num]);
+    const correctAnswer = options[Math.floor(Math.random() * NO_OF_OPTIONS)];
+    const flagUrl = 'https://via.placeholder.com/350';
+
+    this.setState(
+      {
+        options,
+        correctAnswer,
+        flagUrl,
+        userChoice: '',
+        status: gameStatus.UNDECIDED
+      },
+      () => {
+        console.log(options);
+        console.log(correctAnswer);
+        console.log(flagUrl);
+      }
+    );
+  }
+
+  handleClick = e => {
+    // arrow func has the same this as parent context
+    // so no bind() necessary
+
+    if (this.state.status === gameStatus.UNDECIDED) {
+      if (!this.state.userChoice) {
+        return;
+      }
+
+      let isWinner =
+        this.state.userChoice === this.state.correctAnswer ? true : false;
+
+      this.setState({
+        status: isWinner ? gameStatus.WINNER : gameStatus.LOST
+      });
+    } else {
+      this.initilizeGame();
+    }
+  };
+
+  handleChange = e => {
+    console.log('Choosing...:' + e.target.value);
+    this.setState({
+      userChoice: e.target.value
+    });
+  };
 
   getDistinctRandomNumbers(elementsWanted, options) {
     let elements = [];
@@ -25,26 +112,30 @@ export default class CountryGame extends Component {
     return elements;
   }
 
-  componentDidMount() {
-    // get flag https: ....   ${answer}
-    /* console.log(countryNames);
-    console.log(answer); */
-  }
-
   render() {
-    let numbers = this.getDistinctRandomNumbers(
-      NO_OF_CHOICES,
-      COUNTRIES.length
-    );
-    let choices = numbers.map(num => COUNTRIES[num]);
-    const answer = choices[Math.floor(Math.random() * NO_OF_CHOICES)];
-    const flag = 'https://via.placeholder.com/350'; //
+    const { options, flagUrl, status, correctAnswer } = this.state;
+    const message =
+      status === gameStatus.WINNER
+        ? 'Correct!'
+        : `Incorrect. Correct answer: ${correctAnswer}`;
+
     return (
       <>
-        <FlagChoices choices={choices} /> or
-        <FlagAnswer answer={answer} />
-        <Button />
-        <FlagQuestion flag={flag} />        
+        {status === gameStatus.UNDECIDED ? (
+          <FlagOptions
+            options={options}
+            userChoice={this.state.userChoice}
+            handleChange={this.handleChange}
+          />
+        ) : (
+          <FlagAnswer message={message} />
+        )}
+
+        <Button
+          handleClick={this.handleClick}
+          text={status === gameStatus.UNDECIDED ? 'Check' : 'Next'}
+        />
+        <Flag flagUrl={flagUrl} />
       </>
     );
   }

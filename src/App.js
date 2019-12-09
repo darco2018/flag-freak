@@ -5,12 +5,12 @@ import CountryGame from './CountryGame';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Country Game</h1>
-        <img id="header-img" src={require('./globe.jpg')} alt="globe map" />
+      <header id="div-with-bg">
+        <h1>Flag Freak</h1>
+        {/* <img id="header-img" src={require('./globe.jpg')} alt="globe map" /> */}
       </header>
       <main>
-        <CountryGame />       
+        <CountryGame />
       </main>
     </div>
   );

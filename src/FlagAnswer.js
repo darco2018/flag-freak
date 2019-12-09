@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 export default function FlagAnswer(props) {
   return (
-    <div>
-      <p>{props.answer}</p>
+    <div id="options">
+      <p>{props.message}</p>
     </div>
   );
 }
 
 FlagAnswer.propTypes = {
-    answer: PropTypes.string.isRequired
+  message: PropTypes.string.isRequired
 };
