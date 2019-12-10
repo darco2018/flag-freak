@@ -20,30 +20,31 @@ export default class CountryGame extends Component {
     this.state = {
       options: null,
       correctAnswer: null,
-      flagUrl: "",
+      flagUrl: '',
       userChoice: null,
       status: null
     };
   }
 
   componentDidMount() {
-    let COUNTRY_DATA = this.fetchCountryData()
-    .then(data=>console.log("Data: " + data.length))
-    .then(() => {
-      this.initilizeGame();
-    })
-        
-    
+    this.fetchJSONCountryData()
+      .then(data => {
+        COUNTRY_DATA = data;
+        console.log('COUNTRY_DATA: ' + COUNTRY_DATA.length);
+        this.initilizeGame();
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
-  fetchCountryData() {
-    
+  fetchJSONCountryData() {
     return fetch(
       'https://restcountries.eu/rest/v2/all?fields=name;capital;flag'
     )
       .then(res => res.json())
       .then(data => {
-       /*  console.log(COUNTRY_DATA.length); */
+        /*  console.log(COUNTRY_DATA.length); */
         return data.length > 0 ? data : [];
       })
       .catch(err => console.log(err));
@@ -52,11 +53,15 @@ export default class CountryGame extends Component {
   initilizeGame() {
     let numbers = this.getDistinctRandomNumbers(
       NO_OF_OPTIONS,
-      COUNTRIES.length
+      COUNTRY_DATA.length
     );
-    let options = numbers.map(num => COUNTRIES[num]);
-    const correctAnswer = options[Math.floor(Math.random() * NO_OF_OPTIONS)];
-    const flagUrl = 'https://via.placeholder.com/350';
+    
+    const optionsObjects = numbers.map(num => COUNTRY_DATA[num]);
+    const correctAnswerObj = optionsObjects[Math.floor(Math.random() * NO_OF_OPTIONS)];
+
+    let options = numbers.map(num => COUNTRY_DATA[num].name);    
+    const correctAnswer = correctAnswerObj.name;
+    const flagUrl = correctAnswerObj.flag;
 
     this.setState(
       {
