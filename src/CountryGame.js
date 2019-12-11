@@ -1,65 +1,57 @@
 import React, { Component } from 'react';
-/* import PropTypes from 'prop-types';
- */ import Button from './Button';
-import FlagOptions from './FlagOptions';
-import FlagAnswer from './FlagAnswer';
-import Flag from './Flag';
+import GeographyQuestion from './GeographyQuestion';
 
-const COUNTRIES = ['Poland', 'USA', 'Canada', 'India', 'Japan', 'Russia'];
-let COUNTRY_DATA = [];
+/* const COUNTRIES = ['Poland', 'USA', 'Canada', 'India', 'Japan', 'Russia'];
+ */
+/* let COUNTRY_DATA = []; */
 const NO_OF_OPTIONS = 4;
-const gameStatus = {
+export const gameStatus = {
   UNDECIDED: 0,
   WINNER: 1,
   LOST: 2
 };
 
+const API_URL = 'https://restcountries.eu/rest/v2/all?fields=name;capital;flag';
+
 export default class CountryGame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      options: null,
-      correctAnswer: null,
-      flagUrl: '',
-      userChoice: null,
-      status: null
+      COUNTRY_DATA: [],
+      options: [],
+      correctAnswer: undefined,
+      status: undefined,
+      // ---------------------
+      flagUrl: undefined,
+      userChoice: undefined
     };
   }
 
   componentDidMount() {
-    this.fetchJSONCountryData()
-      .then(data => {
-        COUNTRY_DATA = data;
-        console.log('COUNTRY_DATA: ' + COUNTRY_DATA.length);
-        this.initilizeGame();
+    this.populateCountries(API_URL)
+      .then(() => {
+        this.startGame();
       })
       .catch(err => {
-        console.log(err);
+        console.log('Error initializing game: ' + err);
       });
   }
 
-  fetchJSONCountryData() {
-    return fetch(
-      'https://restcountries.eu/rest/v2/all?fields=name;capital;flag'
-    )
-      .then(res => res.json())
-      .then(data => {
-        /*  console.log(COUNTRY_DATA.length); */
-        return data.length > 0 ? data : [];
-      })
-      .catch(err => console.log(err));
-  }
-
-  initilizeGame() {
-    let numbers = this.getDistinctRandomNumbers(
+  startGame() {
+    let randomIndexes = this.getDistinctRandomNumbers(
       NO_OF_OPTIONS,
-      COUNTRY_DATA.length
+      this.state.COUNTRY_DATA.length
     );
-    
-    const optionsObjects = numbers.map(num => COUNTRY_DATA[num]);
-    const correctAnswerObj = optionsObjects[Math.floor(Math.random() * NO_OF_OPTIONS)];
 
-    let options = numbers.map(num => COUNTRY_DATA[num].name);    
+    const optionsObjects = randomIndexes.map(
+      index => this.state.COUNTRY_DATA[index]
+    );
+    const correctAnswerObj =
+      optionsObjects[Math.floor(Math.random() * NO_OF_OPTIONS)];
+
+    let options = randomIndexes.map(
+      index => this.state.COUNTRY_DATA[index].name
+    );
     const correctAnswer = correctAnswerObj.name;
     const flagUrl = correctAnswerObj.flag;
 
@@ -95,7 +87,7 @@ export default class CountryGame extends Component {
         status: isWinner ? gameStatus.WINNER : gameStatus.LOST
       });
     } else {
-      this.initilizeGame();
+      this.startGame();
     }
   };
 
@@ -117,31 +109,45 @@ export default class CountryGame extends Component {
     return elements;
   }
 
+  populateCountries(url) {
+    return this.fetchArrOfObjectsFrom(url)
+      .then(countriesJSON => {
+        this.setState({ COUNTRY_DATA: countriesJSON }, () => {
+          console.log('COUNTRY_DATA: ' + this.state.COUNTRY_DATA.length);
+        });
+      })
+      .catch(err => {
+        console.log('Error populating countries ' + err);
+      });
+  }
+
+  fetchArrOfObjectsFrom(url) {
+    return fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        return data.length > 0 ? data : [];
+      })
+      .catch(err => console.log('Error fetching data ' + err));
+  }
+
   render() {
-    const { options, flagUrl, status, correctAnswer } = this.state;
-    const message =
-      status === gameStatus.WINNER
-        ? 'Correct!'
-        : `Incorrect. Correct answer: ${correctAnswer}`;
+    const { options, flagUrl, status, correctAnswer, userChoice } = this.state;
 
-    return (
-      <>
-        {status === gameStatus.UNDECIDED ? (
-          <FlagOptions
-            options={options}
-            userChoice={this.state.userChoice}
-            handleChange={this.handleChange}
-          />
-        ) : (
-          <FlagAnswer message={message} />
-        )}
-
-        <Button
+    // note below
+    if (correctAnswer === undefined) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <GeographyQuestion
+          options={options}
+          flagUrl={flagUrl}
+          status={status}
+          correctAnswer={correctAnswer}
+          userChoice={userChoice}
+          handleChange={this.handleChange}
           handleClick={this.handleClick}
-          text={status === gameStatus.UNDECIDED ? 'Check' : 'Next'}
         />
-        <Flag flagUrl={flagUrl} />
-      </>
-    );
+      );
+    }
   }
 }
