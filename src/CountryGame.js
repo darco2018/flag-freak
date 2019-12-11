@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import GeographyQuestion from './GeographyQuestion';
 
-/* const COUNTRIES = ['Poland', 'USA', 'Canada', 'India', 'Japan', 'Russia'];
- */
-/* let COUNTRY_DATA = []; */
 const NO_OF_OPTIONS = 4;
 export const gameStatus = {
   UNDECIDED: 0,
@@ -37,43 +34,23 @@ export default class CountryGame extends Component {
   }
 
   startGame() {
-    let randomIndexes = this.getDistinctRandomNumbers(
+    let options = this.getDistinctRandomNumbers(
       NO_OF_OPTIONS,
       this.state.COUNTRY_DATA.length
     );
 
-    const options = randomIndexes.map(index => this.state.COUNTRY_DATA[index]);
-
     const correctAnswer = options[Math.floor(Math.random() * NO_OF_OPTIONS)];
-    console.log("correctAnswer:");
-    console.log(correctAnswer);
-    console.log("1.cor name " + correctAnswer.name);
-    console.log("1.cor url " + correctAnswer.flag);
-    console.log("1.cor cap " + correctAnswer.capital);
-
-    /* 
-    );
     
-
-    let options = randomIndexes.map(
-      index => this.state.COUNTRY_DATA[index].name
-    );
-    const correctAnswer = correctAnswerObj.name;
-    const flagUrl = correctAnswerObj.flag; */
-
     this.setState(
       {
         options,
         correctAnswer,
-        userChoice: '',
+        userChoice: -1,
         status: gameStatus.UNDECIDED
       },
       () => {
-        console.log("--------------------");
-        console.log(options);
-        console.log(correctAnswer);
-        console.log("--------------------");
-
+        console.log("options" + options);
+        console.log("correctAnswer" + correctAnswer);
       }
     );
   }
@@ -85,10 +62,10 @@ export default class CountryGame extends Component {
     if (this.state.status === gameStatus.UNDECIDED) {
       if (!this.state.userChoice) {
         return;
-      }
+      }      
 
       let isWinner =
-        this.state.userChoice === this.state.correctAnswer.name ? true : false;
+        this.state.userChoice === this.state.correctAnswer ? true : false;
 
       this.setState({
         status: isWinner ? gameStatus.WINNER : gameStatus.LOST
@@ -99,9 +76,9 @@ export default class CountryGame extends Component {
   };
 
   handleChange = e => {
-    console.log('Choosing...:' + e.target.value);
+    console.log('Setting as userChoice...:' + e.target.id);
     this.setState({
-      userChoice: e.target.value
+      userChoice: Number(e.target.value)
     });
   };
 
@@ -140,10 +117,12 @@ export default class CountryGame extends Component {
   render() {
     const { options, flagUrl, status, correctAnswer, userChoice } = this.state;
 
-    /* console.log(correctAnswer);
-    console.log("2.cor name " + correctAnswer.name);
-    console.log("2.cor url " + correctAnswer.flag);
-    console.log("2.cor cap " + correctAnswer.capital); */
+    // turn indexes into country objects
+    const countries = options.map(index => {
+      return { id: index, ...this.state.COUNTRY_DATA[index] };
+    });
+
+    const correctCountry = this.state.COUNTRY_DATA[correctAnswer];
 
     // note below
     if (correctAnswer === undefined) {
@@ -151,10 +130,10 @@ export default class CountryGame extends Component {
     } else {
       return (
         <GeographyQuestion
-          options={options}
+          options={countries}
           flagUrl={flagUrl}
           status={status}
-          correctAnswer={correctAnswer}
+          correctAnswer={correctCountry}
           userChoice={userChoice}
           handleChange={this.handleChange}
           handleClick={this.handleClick}

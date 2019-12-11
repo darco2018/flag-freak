@@ -21,22 +21,13 @@ export default class GeographyQuestion extends Component {
       handleClick
     } = this.props;
 
-    // get relevant data from country objects
-    options = options.map(
-      opt => opt.name
-    );
-    console.log(">>>>>>>>>>>>>>>>> correctAnswer" + correctAnswer);
+    
+    console.log(" correctAnswer in GeoQue: " + correctAnswer);
     console.log(correctAnswer);
-
-    /* correctAnswer = correctAnswer.name;
-    console.log("cor " + correctAnswer);
-    const flagUrl = correctAnswer.flag;
-    console.log("cor url " + flagUrl);
-    console.log("cor cap " + correctAnswer.capital); */
 
     const message =
       status === gameStatus.WINNER
-        ? `Correct!${correctAnswer.name}`
+        ? `Correct! ${correctAnswer.name}`
         : `Incorrect. Correct answer: ${correctAnswer.name}`;
     return (
       <>
