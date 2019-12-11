@@ -2,19 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './FlagOptions.css';
 
-export default function FlagOptions(props) {
-  let { options, userChoice } = props;
-
+export default function FlagOptions({ options, userChoice, onAnswerChange }) {
   options =
     options &&
     options.map((country, i) => (
       <span key={country.id}>
         <input
           type="radio"
-          name="choice"
           id={country.id}
           value={country.id}
-          onChange={props.handleChange}
+          onChange={onAnswerChange}
           checked={userChoice === country.id ? true : false}
         />
         <label htmlFor={country.name}>{country.name}</label>
@@ -27,5 +24,5 @@ export default function FlagOptions(props) {
 FlagOptions.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   userChoice: PropTypes.number.isRequired,
-  handleChange: PropTypes.func.isRequired
+  onAnswerChange: PropTypes.func.isRequired
 };

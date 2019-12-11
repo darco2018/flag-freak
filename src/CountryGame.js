@@ -17,9 +17,9 @@ export default class CountryGame extends Component {
       COUNTRY_DATA: [],
       options: [],
       correctAnswer: undefined,
-      status: undefined,
+      status: gameStatus.UNDECIDED,
       // ---------------------
-      userChoice: undefined
+      userChoice: -1
     };
   }
 
@@ -39,8 +39,9 @@ export default class CountryGame extends Component {
       this.state.COUNTRY_DATA.length
     );
 
-    const correctAnswer = options[Math.floor(Math.random() * NO_OF_OPTIONS)];
-    
+    const random = Math.floor(Math.random() * NO_OF_OPTIONS);
+    const correctAnswer = options[random];
+
     this.setState(
       {
         options,
@@ -49,20 +50,20 @@ export default class CountryGame extends Component {
         status: gameStatus.UNDECIDED
       },
       () => {
-        console.log("options" + options);
-        console.log("correctAnswer" + correctAnswer);
+        console.log('options' + options);
+        console.log('correctAnswer' + correctAnswer);
       }
     );
   }
 
-  handleClick = e => {
+  onButtonClick = e => {
     // arrow func has the same this as parent context
     // so no bind() necessary
 
     if (this.state.status === gameStatus.UNDECIDED) {
-      if (!this.state.userChoice) {
+      if (this.state.userChoice === -1) {
         return;
-      }      
+      }
 
       let isWinner =
         this.state.userChoice === this.state.correctAnswer ? true : false;
@@ -75,7 +76,7 @@ export default class CountryGame extends Component {
     }
   };
 
-  handleChange = e => {
+  onAnswerChange = e => {
     console.log('Setting as userChoice...:' + e.target.id);
     this.setState({
       userChoice: Number(e.target.value)
@@ -115,7 +116,7 @@ export default class CountryGame extends Component {
   }
 
   render() {
-    const { options, flagUrl, status, correctAnswer, userChoice } = this.state;
+    const { options, status, correctAnswer, userChoice } = this.state;
 
     // turn indexes into country objects
     const countries = options.map(index => {
@@ -131,12 +132,11 @@ export default class CountryGame extends Component {
       return (
         <GeographyQuestion
           options={countries}
-          flagUrl={flagUrl}
           status={status}
           correctAnswer={correctCountry}
           userChoice={userChoice}
-          handleChange={this.handleChange}
-          handleClick={this.handleClick}
+          onAnswerChange={this.onAnswerChange}
+          onButtonClick={this.onButtonClick}
         />
       );
     }
