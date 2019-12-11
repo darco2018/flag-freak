@@ -22,7 +22,6 @@ export default class CountryGame extends Component {
       correctAnswer: undefined,
       status: undefined,
       // ---------------------
-      flagUrl: undefined,
       userChoice: undefined
     };
   }
@@ -43,30 +42,38 @@ export default class CountryGame extends Component {
       this.state.COUNTRY_DATA.length
     );
 
-    const optionsObjects = randomIndexes.map(
-      index => this.state.COUNTRY_DATA[index]
+    const options = randomIndexes.map(index => this.state.COUNTRY_DATA[index]);
+
+    const correctAnswer = options[Math.floor(Math.random() * NO_OF_OPTIONS)];
+    console.log("correctAnswer:");
+    console.log(correctAnswer);
+    console.log("1.cor name " + correctAnswer.name);
+    console.log("1.cor url " + correctAnswer.flag);
+    console.log("1.cor cap " + correctAnswer.capital);
+
+    /* 
     );
-    const correctAnswerObj =
-      optionsObjects[Math.floor(Math.random() * NO_OF_OPTIONS)];
+    
 
     let options = randomIndexes.map(
       index => this.state.COUNTRY_DATA[index].name
     );
     const correctAnswer = correctAnswerObj.name;
-    const flagUrl = correctAnswerObj.flag;
+    const flagUrl = correctAnswerObj.flag; */
 
     this.setState(
       {
         options,
         correctAnswer,
-        flagUrl,
         userChoice: '',
         status: gameStatus.UNDECIDED
       },
       () => {
+        console.log("--------------------");
         console.log(options);
         console.log(correctAnswer);
-        console.log(flagUrl);
+        console.log("--------------------");
+
       }
     );
   }
@@ -81,7 +88,7 @@ export default class CountryGame extends Component {
       }
 
       let isWinner =
-        this.state.userChoice === this.state.correctAnswer ? true : false;
+        this.state.userChoice === this.state.correctAnswer.name ? true : false;
 
       this.setState({
         status: isWinner ? gameStatus.WINNER : gameStatus.LOST
@@ -132,6 +139,11 @@ export default class CountryGame extends Component {
 
   render() {
     const { options, flagUrl, status, correctAnswer, userChoice } = this.state;
+
+    /* console.log(correctAnswer);
+    console.log("2.cor name " + correctAnswer.name);
+    console.log("2.cor url " + correctAnswer.flag);
+    console.log("2.cor cap " + correctAnswer.capital); */
 
     // note below
     if (correctAnswer === undefined) {

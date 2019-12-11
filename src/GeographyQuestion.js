@@ -7,14 +7,13 @@ import Flag from './Flag';
 import { gameStatus } from './CountryGame';
 
 export default class GeographyQuestion extends Component {
-  static propTypes = {
+  /* static propTypes = {
     prop: PropTypes
-  };
+  }; */
 
   render() {
-    const {
+    let {
       options,
-      flagUrl,
       status,
       correctAnswer,
       userChoice,
@@ -22,10 +21,23 @@ export default class GeographyQuestion extends Component {
       handleClick
     } = this.props;
 
+    // get relevant data from country objects
+    options = options.map(
+      opt => opt.name
+    );
+    console.log(">>>>>>>>>>>>>>>>> correctAnswer" + correctAnswer);
+    console.log(correctAnswer);
+
+    /* correctAnswer = correctAnswer.name;
+    console.log("cor " + correctAnswer);
+    const flagUrl = correctAnswer.flag;
+    console.log("cor url " + flagUrl);
+    console.log("cor cap " + correctAnswer.capital); */
+
     const message =
       status === gameStatus.WINNER
-        ? 'Correct!'
-        : `Incorrect. Correct answer: ${correctAnswer}`;
+        ? `Correct!${correctAnswer.name}`
+        : `Incorrect. Correct answer: ${correctAnswer.name}`;
     return (
       <>
         {status === gameStatus.UNDECIDED ? (
@@ -42,7 +54,7 @@ export default class GeographyQuestion extends Component {
           handleClick={handleClick}
           text={status === gameStatus.UNDECIDED ? 'Check' : 'Next'}
         />
-        <Flag flagUrl={flagUrl} />
+        <Flag flagUrl={correctAnswer.flag} />
       </>
     );
   }
