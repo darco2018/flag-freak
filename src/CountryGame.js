@@ -18,7 +18,6 @@ export default class CountryGame extends Component {
       options: [],
       correctAnswer: undefined,
       status: gameStatus.UNDECIDED,
-      // ---------------------
       userChoice: -1
     };
   }
@@ -42,24 +41,15 @@ export default class CountryGame extends Component {
     const random = Math.floor(Math.random() * NO_OF_OPTIONS);
     const correctAnswer = options[random];
 
-    this.setState(
-      {
-        options,
-        correctAnswer,
-        userChoice: -1,
-        status: gameStatus.UNDECIDED
-      },
-      () => {
-        console.log('options' + options);
-        console.log('correctAnswer' + correctAnswer);
-      }
-    );
+    this.setState({
+      options,
+      correctAnswer,
+      userChoice: -1,
+      status: gameStatus.UNDECIDED
+    });
   }
 
-  onButtonClick = e => {
-    // arrow func has the same this as parent context
-    // so no bind() necessary
-
+  handleButtonClick = e => {
     if (this.state.status === gameStatus.UNDECIDED) {
       if (this.state.userChoice === -1) {
         return;
@@ -76,8 +66,7 @@ export default class CountryGame extends Component {
     }
   };
 
-  onAnswerChange = e => {
-    console.log('Setting as userChoice...:' + e.target.id);
+  handleAnswerChange = e => {
     this.setState({
       userChoice: Number(e.target.value)
     });
@@ -98,7 +87,10 @@ export default class CountryGame extends Component {
     return this.fetchArrOfObjectsFrom(url)
       .then(countriesJSON => {
         this.setState({ COUNTRY_DATA: countriesJSON }, () => {
-          console.log('COUNTRY_DATA: ' + this.state.COUNTRY_DATA.length);
+          console.log(
+            'callback will fire after setting state: ' +
+              this.state.COUNTRY_DATA.length
+          );
         });
       })
       .catch(err => {
@@ -135,8 +127,8 @@ export default class CountryGame extends Component {
           status={status}
           correctAnswer={correctCountry}
           userChoice={userChoice}
-          onAnswerChange={this.onAnswerChange}
-          onButtonClick={this.onButtonClick}
+          onAnswerChange={this.handleAnswerChange}
+          onButtonClick={this.handleButtonClick}
         />
       );
     }
