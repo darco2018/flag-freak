@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "dbd307d89e6fb42043f9eeff32212185",
+    "revision": "093bd0c07b3d7ec79fc4753d89e1b0b3",
     "url": "/flag-freak/index.html"
   },
   {
-    "revision": "77f5afd4dc6c1b4adabe",
-    "url": "/flag-freak/static/css/main.b1a9b2db.chunk.css"
+    "revision": "27732ff05e4c5c87dce4",
+    "url": "/flag-freak/static/css/main.a80856e5.chunk.css"
   },
   {
     "revision": "b8940e07d9721cc468b2",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/flag-freak/static/js/2.3919a26e.chunk.js.LICENSE"
   },
   {
-    "revision": "77f5afd4dc6c1b4adabe",
-    "url": "/flag-freak/static/js/main.cef54d57.chunk.js"
+    "revision": "27732ff05e4c5c87dce4",
+    "url": "/flag-freak/static/js/main.a25e97ff.chunk.js"
   },
   {
     "revision": "0d91bb52df09001926ef",
