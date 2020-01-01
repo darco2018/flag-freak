@@ -3,18 +3,25 @@ import PropTypes from 'prop-types';
 import './FlagOptions.css';
 
 export default function FlagOptions({ options, userChoice, onAnswerChange }) {
+
+
+const handleClick = (e) => {
+  let userChoice =  e.target.tagName === "LABEL" ? e.target.previousSibling.value : e.target.value;
+  onAnswerChange(userChoice);
+}
+
   options =
     options &&
     options.map((country, i) => (
-      <span key={country.id}>
+      <span className="option"  key={country.id}>
         <input
           type="radio"
           id={country.id}
           value={country.id}
-          onChange={onAnswerChange}
+          onChange={handleClick}
           checked={userChoice === country.id ? true : false}
         />
-        <label htmlFor={country.name}>{country.name}</label>
+        <label htmlFor={country.name} onClick={handleClick}>{country.name}</label>
       </span>
     ));
 

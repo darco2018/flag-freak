@@ -66,9 +66,9 @@ export default class CountryGame extends Component {
     }
   };
 
-  handleAnswerChange = e => {
+  handleAnswerChange = val => {
     this.setState({
-      userChoice: Number(e.target.value)
+      userChoice: Number(val)
     });
   };
 
@@ -87,10 +87,7 @@ export default class CountryGame extends Component {
     return this.fetchArrOfObjectsFrom(url)
       .then(countriesJSON => {
         this.setState({ COUNTRY_DATA: countriesJSON }, () => {
-          console.log(
-            'callback will fire after setting state: ' +
-              this.state.COUNTRY_DATA.length
-          );
+          /*  console.log(); */
         });
       })
       .catch(err => {
