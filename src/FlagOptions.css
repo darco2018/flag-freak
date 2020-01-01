@@ -1,3 +1,13 @@
+@media (max-width: 600px){
+  .option {
+    display: block;
+    text-align: left;
+    margin: 0.2em 0.6em;
+  }
+}
+
+
+
 #options {  
   font-size: 1.3em;
   margin-top: 20px;
@@ -7,4 +17,6 @@
 label {
   margin-right: 10px;
 }
+
+
 
